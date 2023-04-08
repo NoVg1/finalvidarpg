@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RPG de Mesa - Controle de Vida</title>
+	<script>
+		var vida = [];
+
+		function adicionarJogador() {
+			var nome = document.getElementById("nome").value;
+			var vidaInicial = parseInt(document.getElementById("vidaInicial").value);
+			if (nome != "" && !isNaN(vidaInicial) && vidaInicial >= 0) {
+				vida.push({"nome": nome, "vida": vidaInicial});
+				atualizarTabela();
+			}
+		}
+		
+		function atualizarTabela() {
+			var tabela = document.getElementById("tabela");
+			tabela.innerHTML = "";
+			for(var i = 0; i < vida.length; i++) {
+				var linha = tabela.insertRow();
+				var colunaNome = linha.insertCell();
+				colunaNome.innerHTML = vida[i].nome;
+				var colunaVida = linha.insertCell();
+				colunaVida.innerHTML = vida[i].vida;
+				var colunaBotaoDano = linha.insertCell();
+				var botaoDano = document.createElement("button");
+				botaoDano.innerHTML = "Tirar dano";
+				botaoDano.setAttribute("onclick", "tirarVida(" + i + ")");
+				colunaBotaoDano.appendChild(botaoDano);
+				var colunaBotaoCura = linha.insertCell();
+				var botaoCura = document.createElement("button");
+				botaoCura.innerHTML = "Curar";
+				botaoCura.setAttribute("onclick", "curarVida(" + i + ")");
+				colunaBotaoCura.appendChild(botaoCura);
+			}
+		}
+		
+		function tirarVida(index) {
+			var dano = parseInt(prompt("Quantidade de dano:"));
+			if(isNaN(dano) || dano < 0) {
+				alert("Por favor, informe uma quantidade de dano válida.");
+				return;
+			}
+			vida[index].vida -= dano;
+			if(vida[index].vida < 0) {
+				vida[index].vida = 0;
+			}
+			atualizarTabela();
+		}
+		
+		function curarVida(index) {
+			var cura = parseInt(prompt("Quantidade de cura:"));
+			if(isNaN(cura) || cura < 0) {
+				alert("Por favor, informe uma quantidade de cura válida.");
+				return;
+			}
+			vida[index].vida += cura;
+			if(vida[index].vida > 100) {
+				vida[index].vida = 100;
+			}
+			atualizarTabela();
+		}
+	</script>
+</head>
+<body>
+	<h1>RPG de Mesa - Controle de Vida</h1>
+	<label for="nome">Nome do jogador:</label>
+	<input type="text" id="nome">
+	<label for="vidaInicial">Vida inicial:</label>
+	<input type="number" id="vidaInicial">
+	<button onclick="adicionarJogador()">Adicionar jogador</button>
+	<table>
+		<thead>
+			<tr>
+				<th>Nome</th>
+				<th>Vida</th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody id="tabela">
+		</tbody>
+	</table>
+</body>
+</html>
